@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Autodrawer</title>
+
+    <!-- bs4 css -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"/>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+    <!-- TensorFlow.js script -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+
+    <!-- canvas script -->
+    <script src="fabric.js"></script>
+
+    <!-- main script -->
+    <script src="main.js"></script>
+
+    <!-- main css -->
+    <link rel="stylesheet" href="main.css">
+
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-light navbar-light">
+    <!-- Brand/logo -->
+    <a class="navbar-brand" href="#">
+        <h1>Autodraw
+            <samll>er</samll>
+        </h1>
+    </a>
+</nav>
+<div class="container-fluid">
+
+    <blockquote class="blockquote text-justify" style="margin:30px;">
+        <p> Autodrawer is a model to complete quick draw for specific type, when user give a starting stroke.
+            Using the quick draw <a href='https://github.com/googlecreativelab/quickdraw-dataset'> dataset</a>.
+        </p>
+        <footer class="blockquote-footer">Zhaocc</footer>
+    </blockquote>
+</div>
+
+<div class="row">
+    <div class="col" style='margin-left:100px;'>
+        <h4 id='status'>Loading Model... </h4>
+        <canvas id="canvas" width="500" height="500" class="canvas"
+                style="border:1px solid #b9bfc9;margin-top:25px;"></canvas>
+        <div class="btn-group" style='margin-top:40px; '>
+            <input type="range" min="3" max="20" value="5" class="slider"
+                   id="myRange" style='margin-top:20px;' disabled hidden>
+            <button type="button" class="btn btn-outline-primary"
+                    onclick='erase()' style='margin-left:10px;' disabled>Clear
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    start('en')
+</script>
+
+</html>
