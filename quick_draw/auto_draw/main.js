@@ -14,6 +14,7 @@ const CANVAS_SIZE = [500, 500];
 const DRAW_SIZE = [255, 255];
 const DRAW_PREC = 0.01;
 const MAX_LEN = 352;
+const RAINBOW_COLORS = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#8B00FF"];
 
 /*
 load the model
@@ -77,8 +78,10 @@ function recordCoor(event) {
             let yDelta = lastCoord[1] - posY; // Reverse the y coordinate.
 
             // Normalization.
-            xDelta = Number((xDelta / DRAW_SIZE[0]).toFixed(2));
-            yDelta = Number((yDelta / DRAW_SIZE[1]).toFixed(2));
+            // xDelta = Number((xDelta / DRAW_SIZE[0]).toFixed(2));
+            // yDelta = Number((yDelta / DRAW_SIZE[1]).toFixed(2));
+            xDelta = xDelta / DRAW_SIZE[0];
+            yDelta = yDelta / DRAW_SIZE[1];
 
             if (predictStroke.length > 0) {
                 if (xDelta === 0.0 && predictStroke[predictStroke.length - 1][0] === 0.0) {
@@ -170,6 +173,10 @@ function autodraw() {
     // predictStroke = [[0.1, 0.04, 0., 0.], [0.12, -0., 0., 0.], [0.04, -0.02, 0., 0.], [0.03, -0.04, 0., 0.],
     //     [-0., -0.07, 0., 0.], [-0.02, -0.02, 0., 0.], [-0.11, -0.07, 0., 0.], [-0.14, -0.01, 0., 0.],
     //     [-0.04, 0.02, 0., 0.], [-0.04, 0.04, 0., 0.]];
+
+    // predictStroke = [[0.07, 0.01, 0., 0.], [0.04, -0.03, 0., 0.], [0.04, -0.06, 0., 0.], [0.01, -0.08, 0., 0.],
+    //     [-0.01, -0.03, 0., 0.], [-0.06, -0.02, 0., 0.], [-0.11, -0.01, 0., 0.], [-0.06, 0.07, 0., 0.],
+    //     [-0.02, 0.11, 0., 0.], [0.09, 0.03, 0., 0.]];
     console.log("The user stroke inks:");
     console.log(userStroke);
 
@@ -202,6 +209,7 @@ function autodraw() {
     predictStroke.splice(0, initialLen);
     // Draw predict inks with the begin position of user stroke end.
     drawInks(predictStroke, "green", userStroke[userStroke.length - 1]);
+    // drawInks(predictStroke, "green", [150, 150]);
 }
 
 /*
@@ -223,21 +231,21 @@ function drawInks(inks, color, beginPos) {
         inkCoords[ink][0] *= DRAW_SIZE[0];
         inkCoords[ink][1] *= DRAW_SIZE[1];
     }
-    // console.log(inkCoords[1].slice());
+    // console.log(inkCoords);
     // 3. Draw every stroke.
     let stroke = [];
     for (let ink in inkCoords) {
         // Check if is complete ink.
         if (inkCoords[ink][3] > 0.5) {
-            drawStroke(stroke, color);
+            drawStroke(stroke);
             stroke = [];
             return;
         }
         // Check if is stroke end ink.
         if (inkCoords[ink][2] > 0.5) {
             // It's the stroke end ink, draw current stroke.
-            drawStroke(stroke, color);
-            beginPos = stroke[stroke.length - 1];
+            stroke.push([inkCoords[ink][0], inkCoords[ink][1]]);
+            drawStroke(stroke);
             stroke = [];
         } else {
             // It's one point in stroke, add into current stroke.
@@ -246,15 +254,14 @@ function drawInks(inks, color, beginPos) {
     }
     if (stroke.length !== 0) {
         // There has been left inks.
-        drawStroke(stroke, color);
+        drawStroke(stroke);
     }
 }
 
 /*
 Draw stroke.
 */
-function drawStroke(stroke, color) {
-    console.log("The begin position:");
+function drawStroke(stroke) {
     let pathStr = "M " + stroke[0][0] + " " + stroke[0][1]; // The start ink.
     for (let ink in stroke) {
         if (ink == 0) {
@@ -264,6 +271,7 @@ function drawStroke(stroke, color) {
     }
     console.log("pathStr: " + pathStr);
     const path = new fabric.Path(pathStr);
-    path.set({fill: "transparent", stroke: color});
+    const randColorInd = Math.round(Math.random() * 6);
+    path.set({fill: "transparent", stroke: RAINBOW_COLORS[randColorInd]});
     canvas.add(path);
 }
