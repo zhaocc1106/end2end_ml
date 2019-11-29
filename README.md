@@ -17,4 +17,5 @@ https://zhaocc1106.github.io/end2end_ml/quick_draw/auto_draw/<br>
 1. 笔画采集和预处理不太满足模型输入<br>
 2. 模型本身问题<br>
 3. 训练数据不够随机性<br>
+
 后续再继续优化
