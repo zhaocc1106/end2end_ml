@@ -2,13 +2,14 @@
 variables
 */
 var model;
-var canvas;
+var canvas = null;
 var classNames = [];
 var lastCoord = null;
 var userStroke = []; // The stroke drawn by user.
 var predictStroke = []; // The stroke predicted by model.
 var mousePressed = false;
 var mode;
+var currentModel = "flower"; // The current model, flower or school_bus model.
 
 const CANVAS_SIZE = [500, 500];
 const DRAW_SIZE = [255, 255];
@@ -19,15 +20,19 @@ const RAINBOW_COLORS = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#00FFFF", "
 /*
 load the model
 */
-async function start(cur_mode) {
+async function start(cur_mode, model) {
     // arabic or english
     mode = cur_mode;
+    currentModel = model;
 
     // load drawing canvas
-    loadCanvas();
-
-    // Allow drawing.
-    await allowDrawing();
+    if (canvas === null) {
+        loadCanvas();
+        // Allow drawing.
+        await allowDrawing(currentModel);
+    } else {
+        await erase();
+    }
 }
 
 /*
@@ -115,9 +120,9 @@ function recordCoor(event) {
 /*
 allow drawing on canvas
 */
-async function allowDrawing() {
+async function allowDrawing(currentModel) {
     // load the model
-    model = await tf.loadLayersModel('model/flower/model.json');
+    model = await tf.loadLayersModel('model/' + currentModel + '/model.json');
 
     canvas.isDrawingMode = 1;
     if (mode === 'en')
@@ -146,7 +151,7 @@ async function erase() {
         document.getElementById('status').innerHTML = 'Loading Model... ';
 
     // allow drawing on the canvas
-    await allowDrawing();
+    await allowDrawing(currentModel);
 }
 
 /*
