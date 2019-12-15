@@ -13,7 +13,7 @@ var currentModel = "flower"; // The current model, flower or school_bus model.
 
 const CANVAS_SIZE = [500, 500];
 const DRAW_SIZE = [255, 255];
-const DRAW_PREC = 0.01;
+const DRAW_PREC = 0.03;
 const MAX_LEN = 352;
 const RAINBOW_COLORS = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#8B00FF"];
 
