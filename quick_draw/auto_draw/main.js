@@ -11,7 +11,6 @@ var mousePressed = false;
 var mode;
 var currentModel = "flower"; // The current model, flower or school_bus model.
 
-const CANVAS_SIZE = [500, 500];
 const DRAW_SIZE = [255, 255];
 const DRAW_PREC = 0.03;
 const MAX_LEN = 352;
@@ -191,7 +190,9 @@ function autodraw() {
     const initialLen = predictStroke.length;
     console.log("The initial inks len: " + initialLen);
     // Enter the initial inks.
-    let pred = model.predict(preprocess(predictStroke)).dataSync();
+    let predTf = model.predict(preprocess(predictStroke));
+    let pred = predTf.dataSync();
+    predTf.dispose();
     // Find he last ink.
     const index = (initialLen - 1) * 4;
     let pred_ = [pred[index], pred[index + 1], pred[index + 2], pred[index + 3]];
@@ -203,7 +204,9 @@ function autodraw() {
         // Use the last ink as input.
         inp = [predictStroke[predictStroke.length - 1]];
         // Enter the initial inks.
-        pred = model.predict(preprocess(inp)).dataSync();
+        predTf = model.predict(preprocess(inp));
+        pred = predTf.dataSync();
+        predTf.dispose();
         // Find he last ink.
         pred_ = [pred[0], pred[1], pred[2], pred[3]];
         // Save the new ink.

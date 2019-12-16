@@ -12,6 +12,7 @@ var mode;
 
 const DRAW_SIZE = [255, 255];
 const DRAW_PREC = 0.03;
+const RAINBOW_COLORS = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#8B00FF"];
 
 /*
 load the model
@@ -19,15 +20,6 @@ load the model
 async function start(cur_mode) {
     // arabic or english
     mode = cur_mode;
-
-    // load drawing canvas
-    if (canvas === null) {
-        loadCanvas();
-        // Allow drawing.
-        allowDrawing();
-    } else {
-        await erase();
-    }
 
     // Load class names text.
     await loadDict();
@@ -39,6 +31,15 @@ async function start(cur_mode) {
     let prediction = model.predict(tf.zeros([1, 30, 3]));
     prediction.print();
     prediction.dispose();
+
+    // load drawing canvas
+    if (canvas === null) {
+        loadCanvas();
+        // Allow drawing.
+        allowDrawing();
+    } else {
+        await erase();
+    }
 }
 
 /*
@@ -49,8 +50,9 @@ function loadCanvas() {
     canvas = window._canvas = new fabric.Canvas('canvas');
     canvas.backgroundColor = '#ffffff';
     canvas.isDrawingMode = 0;
-    canvas.freeDrawingBrush.color = "black";
-    canvas.freeDrawingBrush.width = 5;
+    const randColorInd = Math.round(Math.random() * 6);
+    canvas.freeDrawingBrush.color = RAINBOW_COLORS[randColorInd];
+    canvas.freeDrawingBrush.width = 3;
     canvas.renderAll();
     // setup listeners
     canvas.on('mouse:up', function (e) {
@@ -64,6 +66,10 @@ function loadCanvas() {
             if (predictStroke.length > 0) {
                 predictStroke[predictStroke.length - 1][2] = 1.0;
             }
+
+            // Change the color.
+            const randColorInd = Math.round(Math.random() * 6);
+            canvas.freeDrawingBrush.color = RAINBOW_COLORS[randColorInd];
         }
     });
     canvas.on('mouse:down', function (e) {
@@ -205,9 +211,6 @@ function classify() {
     console.log(userStroke);
 
     console.log("The input inks:");
-    // The last ink is end of stroke.
-    predictStroke[predictStroke.length - 1][2] = 1.0;
-
     /* A test quick draw. */
     // predictStroke = [[0.1490196, 0.01568627, 0.],
     //     [0.10196081, -0.02745098, 0.],
@@ -245,8 +248,8 @@ function classify() {
     //     [-0., -0.02745098, 0.],
     //     [-0.02352941, -0.03529412, 0.],
     //     [-0.05490196, -0.04313725, 1.]];
-
     console.log(predictStroke);
+
     // Predict the class name index.
     let pred = model.predict(preprocess(predictStroke));
     let predArr = pred.dataSync();
