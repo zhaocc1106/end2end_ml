@@ -10,6 +10,9 @@
     <!-- css pie -->
     <link rel="stylesheet" href="pie.css">
 
+    <!-- main css -->
+    <link rel="stylesheet" href="main.css">
+
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -28,8 +31,8 @@
     <!-- main script -->
     <script src="main.js"></script>
 
-    <!-- main css -->
-    <link rel="stylesheet" href="main.css">
+    <!-- pie script -->
+    <script src="pie.js"></script>
 
 </head>
 <body>
@@ -49,13 +52,6 @@
         </p>
         <footer class="blockquote-footer">Zhaocc</footer>
     </blockquote>
-    <div class="row">
-        <div class="col" style='margin-left:100px;'>
-            <div class="btn-group" role="group" aria-label="Basic example">
-
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="row">
@@ -79,10 +75,8 @@
         </div>
     </div>
     <div class="col">
-        <section style="margin-top:120px">
-            <div class="pieID pie">
-
-            </div>
+        <section style="margin-top:120px;margin-left:-300px;">
+            <div class="pieID pie"></div>
             <ul class="pieID legend">
                 <li>
                     <em id="sym1"></em>
@@ -109,7 +103,7 @@
     </div>
 </div>
 </body>
-<script src="pie.js"></script>
+
 <script>
     start('zh');
 </script>
