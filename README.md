@@ -11,7 +11,7 @@ https://github.com/zhaocc1106/machine_learn/tree/master/NeuralNetworks-tensorflo
 训练完之后通过tensorflowjs_converter --input_format keras model.h5 ./命令将模型转换为tensorflow.ts模型.
 #### 效果
 https://zhaocc1106.github.io/end2end_ml/quick_draw/quick_draw_classify/<br>
-<img src="https://github.com/zhaocc1106/end2end_ml/blob/master/quick_draw/quick_draw_classify/out/quick_draw_classify.gif"  height="400" width="700" alt="autodrawer">
+<img src="https://github.com/zhaocc1106/end2end_ml/blob/master/quick_draw/quick_draw_classify/out/quick_draw_classify.gif"  height="400" width="700" alt="quick_draw_classifier">
 
 
 ## quick_draw_Autodrawer模型
