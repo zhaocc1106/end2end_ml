@@ -9,7 +9,7 @@ var userStroke = []; // The stroke drawn by user.
 var predictStroke = []; // The stroke predicted by model.
 var mousePressed = false;
 var mode;
-var currentModel = "flower"; // The current model, flower or school_bus model.
+var currentModel = "sun"; // The current model, flower or school_bus model.
 
 const DRAW_SIZE = [255, 255];
 const DRAW_PREC = 0.03;
