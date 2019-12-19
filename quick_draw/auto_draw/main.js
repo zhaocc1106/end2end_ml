@@ -13,7 +13,7 @@ var currentModel = "sun"; // The current model, flower or school_bus model.
 
 const DRAW_SIZE = [255, 255];
 const DRAW_PREC = 0.03;
-const MAX_LEN = 352;
+const MAX_LEN = {"flower": 352, "sun": 291, "school_bus": 239};
 const RAINBOW_COLORS = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#8B00FF"];
 
 /*
@@ -211,7 +211,7 @@ function autodraw() {
         pred_ = [pred[0], pred[1], pred[2], pred[3]];
         // Save the new ink.
         predictStroke.push(pred_);
-    } while (pred[3] < 0.5 && predictStroke.length <= MAX_LEN - initialLen);
+    } while (pred[3] < 0.5 && predictStroke.length <= MAX_LEN[currentModel] - initialLen);
     console.log(predictStroke);
     // Pop the initial inks.
     predictStroke.splice(0, initialLen);
@@ -223,7 +223,7 @@ function autodraw() {
 /*
 Drawing with inks.
 */
-function drawInks(inks, color, beginPos) {
+async function drawInks(inks, color, beginPos) {
     // 1, generate coords by deltas.
     let inkCoords = [[beginPos[0] / DRAW_SIZE[0], beginPos[1] / DRAW_SIZE[1], 0, 0]];
     for (let ink in inks) {
@@ -245,7 +245,7 @@ function drawInks(inks, color, beginPos) {
     for (let ink in inkCoords) {
         // Check if is complete ink.
         if (inkCoords[ink][3] > 0.5) {
-            drawStroke(stroke);
+            await drawStroke(stroke);
             stroke = [];
             return;
         }
@@ -253,7 +253,7 @@ function drawInks(inks, color, beginPos) {
         if (inkCoords[ink][2] > 0.5) {
             // It's the stroke end ink, draw current stroke.
             stroke.push([inkCoords[ink][0], inkCoords[ink][1]]);
-            drawStroke(stroke);
+            await drawStroke(stroke);
             stroke = [];
         } else {
             // It's one point in stroke, add into current stroke.
@@ -262,24 +262,40 @@ function drawInks(inks, color, beginPos) {
     }
     if (stroke.length !== 0) {
         // There has been left inks.
-        drawStroke(stroke);
+        await drawStroke(stroke);
     }
+}
+
+/*
+Sleep function.
+ */
+function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 /*
 Draw stroke.
 */
-function drawStroke(stroke) {
-    let pathStr = "M " + stroke[0][0] + " " + stroke[0][1]; // The start ink.
+async function drawStroke(stroke) {
+    const randColorInd = Math.round(Math.random() * 6);
+    const color = RAINBOW_COLORS[randColorInd];
+
+    if (stroke.length === 1) {
+        const pathStr = "M " + stroke[0][0] + " " + stroke[0][1];
+        const path = new fabric.Path(pathStr);
+        path.set({fill: "transparent", stroke: color, strokeWidth: 3});
+        canvas.add(path);
+        await sleep(10);
+    }
+
     for (let ink in stroke) {
         if (ink == 0) {
             continue;
         }
-        pathStr = pathStr + " L " + stroke[ink][0] + " " + stroke[ink][1];
+        const pathStr = "M " + stroke[ink - 1][0] + " " + stroke[ink - 1][1] + " L " + stroke[ink][0] + " " + stroke[ink][1];
+        const path = new fabric.Path(pathStr);
+        path.set({fill: "transparent", stroke: color, strokeWidth: 3});
+        canvas.add(path);
+        await sleep(10);
     }
-    console.log("pathStr: " + pathStr);
-    const path = new fabric.Path(pathStr);
-    const randColorInd = Math.round(Math.random() * 6);
-    path.set({fill: "transparent", stroke: RAINBOW_COLORS[randColorInd]});
-    canvas.add(path);
 }
