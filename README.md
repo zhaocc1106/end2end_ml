@@ -14,7 +14,7 @@ https://zhaocc1106.github.io/end2end_ml/quick_draw/quick_draw_classify/<br>
 <img src="https://github.com/zhaocc1106/end2end_ml/blob/master/quick_draw/quick_draw_classify/out/quick_draw_classify.gif"  height="400" width="700" alt="quick_draw_classifier">
 
 
-## quick_draw_Autodrawer模型
+## quick_draw_autopainter模型
 #### 说明
 根据用户的起始笔画,来完成后续的简笔画.
 #### 数据集
