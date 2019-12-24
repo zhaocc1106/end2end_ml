@@ -279,23 +279,45 @@ Draw stroke.
 async function drawStroke(stroke) {
     const randColorInd = Math.round(Math.random() * 6);
     const color = RAINBOW_COLORS[randColorInd];
+    let pathStr = "";
 
     if (stroke.length === 1) {
-        const pathStr = "M " + stroke[0][0] + " " + stroke[0][1];
+        console.log("Only have one ink.");
+        pathStr = "M " + stroke[0][0] + " " + stroke[0][1];
         const path = new fabric.Path(pathStr);
         path.set({fill: "transparent", stroke: color, strokeWidth: 3});
         canvas.add(path);
         await sleep(10);
+        return;
     }
 
     for (let ink in stroke) {
         if (ink == 0) {
             continue;
         }
-        const pathStr = "M " + stroke[ink - 1][0] + " " + stroke[ink - 1][1] + " L " + stroke[ink][0] + " " + stroke[ink][1];
-        const path = new fabric.Path(pathStr);
-        path.set({fill: "transparent", stroke: color, strokeWidth: 3});
-        canvas.add(path);
-        await sleep(10);
+
+        if (pathStr === "") {
+            pathStr = "M " + stroke[ink - 1][0] + " " + stroke[ink - 1][1] + " L " + stroke[ink][0] + " " + stroke[ink][1];
+        } else {
+            pathStr += " L " + stroke[ink][0] + " " + stroke[ink][1];
+        }
+        // If euclidean distance of two ink < 3, add path later and don't delay.
+        console.log(eucDistance(stroke[ink - 1][0], stroke[ink][0], stroke[ink - 1][1], stroke[ink][1]));
+        if (eucDistance(stroke[ink - 1][0], stroke[ink][0], stroke[ink - 1][1], stroke[ink][1]) < 3) {
+            console.log("If euclidean distance of two ink < 3, add path later and don't delay.");
+        } else {
+            const path = new fabric.Path(pathStr);
+            path.set({fill: "transparent", stroke: color, strokeWidth: 3});
+            canvas.add(path);
+            pathStr = "";
+            await sleep(10);
+        }
     }
+}
+
+/*
+Calc the euclidean distance.
+ */
+function eucDistance(x0, x1, y0, y1) {
+    return ((x1 - x0) ** 2 + (y1 - y0) ** 2) ** 0.5;
 }
